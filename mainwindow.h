@@ -6,16 +6,19 @@
 #include <QVector>
 #include <QString>
 
-struct TimeSlot {
+struct TimeSlot
+{
     QString time;
     bool isBooked;
+    QString bookedBy;
 };
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
 
-class MainWindow : public QMainWindow {
+class MainWindow : public QMainWindow
+{
     Q_OBJECT
 
 public:
