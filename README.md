@@ -49,3 +49,7 @@
 3. `feat: add user name input on slot reservation` — додавання реєстрації імені через `QInputDialog`.
 4. `feat: implement schedule state persistence with JSON` — повноцінне збереження та завантаження розкладу.
 
+## Скріншоти програми
+
+![Вільні слоти](images/screen2.png)
+![Заброньований слот](images/screen1.png)
