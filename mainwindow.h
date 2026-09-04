@@ -32,9 +32,13 @@ private:
     void setupUI();
     void updateButtonVisuals(QPushButton* button, bool isBooked);
 
+    void saveScheduleToFile();
+    void loadScheduleFromFile();
+
     Ui::MainWindow *ui;
     QVector<TimeSlot> m_slots;
     QVector<QPushButton*> m_slotButtons;
+    const QString m_fileName = "schedule.json";
 };
 
 #endif // MAINWINDOW_H

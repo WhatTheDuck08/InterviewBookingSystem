@@ -6,6 +6,10 @@
 #include <QLabel>
 #include <QInputDialog>
 #include <QLineEdit>
+#include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWindow)
 {
@@ -24,6 +28,7 @@ MainWindow::MainWindow(QWidget *parent): QMainWindow(parent), ui(new Ui::MainWin
     };
 
     setupUI();
+    loadScheduleFromFile();
 }
 
 MainWindow::~MainWindow()
@@ -94,6 +99,7 @@ void MainWindow::onSlotButtonClicked()
     }
 
     updateButtonVisuals(btn, m_slots[index].isBooked);
+    saveScheduleToFile();
 }
 
 void MainWindow::updateButtonVisuals(QPushButton* button, bool isBooked)
@@ -111,5 +117,46 @@ void MainWindow::updateButtonVisuals(QPushButton* button, bool isBooked)
     {
         button->setText(timeStr + "\n[Вільно]");
         button->setStyleSheet("background-color: #2ecc71; color: white; font-weight: bold; padding: 12px; border-radius: 6px;");
+    }
+}
+
+void MainWindow::saveScheduleToFile()
+{
+    QJsonArray slotsArray;
+    for (int i = 0; i < m_slots.size(); ++i)
+    {
+        QJsonObject slotObject;
+        slotObject["time"] = m_slots[i].time;
+        slotObject["isBooked"] = m_slots[i].isBooked;
+        slotObject["bookedBy"] = m_slots[i].bookedBy;
+        slotsArray.append(slotObject);
+    }
+    QJsonDocument doc(slotsArray);
+    QFile file(m_fileName);
+    if (file.open(QIODevice::WriteOnly))
+    {
+        file.write(doc.toJson());
+        file.close();
+    }
+}
+
+void MainWindow::loadScheduleFromFile()
+{
+    QFile file(m_fileName);
+    if (!file.exists() || !file.open(QIODevice::ReadOnly)) return;
+
+    QByteArray data = file.readAll();
+    file.close();
+
+    QJsonDocument doc = QJsonDocument::fromJson(data);
+    if (!doc.isArray()) return;
+
+    QJsonArray slotsArray = doc.array();
+    for (int i = 0; i < slotsArray.size() && i < m_slots.size(); ++i)
+    {
+        QJsonObject slotObject = slotsArray[i].toObject();
+        m_slots[i].isBooked = slotObject["isBooked"].toBool();
+        m_slots[i].bookedBy = slotObject["bookedBy"].toString();
+        updateButtonVisuals(m_slotButtons[i], m_slots[i].isBooked);
     }
 }
