@@ -51,5 +51,5 @@
 
 ## Скріншоти програми
 
-![Вільні слоти](images/screen2.png)
 ![Заброньований слот](images/screen1.png)
+![Вільні слоти](images/screen2.png)
