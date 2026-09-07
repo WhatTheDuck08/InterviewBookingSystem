@@ -11,6 +11,9 @@ qt_add_executable(InterviewBookingSystem
     mainwindow.cpp
     mainwindow.h
     mainwindow.ui
+    timeslot.h
+    schedule.h schedule.cpp
+    schedulestorage.h schedulestorage.cpp
 )
 
 qt_add_translations(

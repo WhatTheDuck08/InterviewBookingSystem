@@ -3,15 +3,12 @@
 
 #include <QMainWindow>
 #include <QPushButton>
+#include <QLabel>
 #include <QVector>
-#include <QString>
+#include <QDate>
 
-struct TimeSlot
-{
-    QString time;
-    bool isBooked;
-    QString bookedBy;
-};
+#include "schedule.h"
+#include "schedulestorage.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -27,18 +24,28 @@ public:
 
 private slots:
     void onSlotButtonClicked();
+    void onNextDayClicked();
+    void onPrevDayClicked();
 
 private:
     void setupUI();
-    void updateButtonVisuals(QPushButton* button, bool isBooked);
-
-    void saveScheduleToFile();
-    void loadScheduleFromFile();
+    void updateButtonVisuals(QPushButton *button, const TimeSlot &slot);
+    void showDay(const QDate &date);
+    void offerNextDayIfFull();
+    void persistSchedule();
 
     Ui::MainWindow *ui;
-    QVector<TimeSlot> m_slots;
+
+    Schedule m_schedule;
+    ScheduleStorage m_storage;
+
     QVector<QPushButton*> m_slotButtons;
-    const QString m_fileName = "schedule.json";
+    QDate m_currentDate;
+
+    QLabel *m_dateLabel = nullptr;
+    QLabel *m_statusLabel = nullptr;
+    QPushButton *m_prevDayBtn = nullptr;
+    QPushButton *m_nextDayBtn = nullptr;
 };
 
-#endif // MAINWINDOW_H
+#endif
